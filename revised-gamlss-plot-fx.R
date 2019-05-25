@@ -1,27 +1,11 @@
-# this is the plot.gamlss function 
-# created by PA  May 2002
-# last change by MS Friday, Wednesday, December 17, 2003 at 09:11
-# to incoorporate options in the plotying parameters
-# the following options have been used for the BCT paper 
-# par(mfrow=c(2,2), mar=par("mar")+c(0,1,0,0), col.axis="blue4", col="blue4", col.main="blue4",col.lab="blue4",pch="+",cex=.45, cex.lab=1.2, cex.axis=1, cex.main=1.2  )
-# it fails in  
+# this is erived from the plot.gamlss function 
+# originally created by PA May 2002
+# revisions made by Emilie Geissinger May 25, 2019
 
-#plot(mod)
-#Error in xy.coords(x, y) :
-#'x' is a list, but does not have components 'x' and 'y'
-#Calls: plot ... axis -> points -> points.default -> plot.xy -> xy.coords
-#Execution halted
-# plot ... axis -> points -> points.default -> plot.xy -> xy.coords
-# brian
-# Error in xy.coords(x, y) :
-#  'x' is a list, but does not have components 'x' and 'y'
-#Calls: plot ... axis -> points -> points.default -> plot.xy -> xy.coords#
+# changed code to produce plots with white background and black axis and points
+# to see original code, go to https://github.com/cran/betareg/blob/master/R/plot.betareg.R
 
-#This is less obvious: the call is
 
-#         rug(residx, col="red", points(par(col="blue4")))
-
-#and the baffling call to points() is the problem.
 
 #-------------------------------------------------------------------------------
 plot.gamlss <- function (x, xvar=NULL, parameters=NULL, ts=FALSE, summaries=TRUE, ...) 
