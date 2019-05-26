@@ -6,11 +6,6 @@ setwd("C:/Users/user/Documents/Research/Beta/")
 # load data
 cod<-read.csv("beta-fish.csv")
 
-install.packages('betareg')
-install.packages('gamlss')
-install.packages('glmmTMB')
-install.packages('DHARMa')
-
 # load packages
 library(betareg)
 library(car)
@@ -30,7 +25,7 @@ summary(cod)
 m1.fish<-glm(pi~factor(pulse)+year+month,data=na.omit(cod),
         family = gaussian(link="identity"))
 plot(m1.fish)
-hist(resid(m.fish1))
+hist(resid(m1.fish))
 # plots for manuscript
 plot(x=fitted(m1.fish),y=resid(m1.fish),main=NULL,xlab="Fitted Values",ylab="Residuals")
 hist(resid(m1.fish),main=NULL,xlab="Residuals")
@@ -60,17 +55,15 @@ m1ANODEV
 m2.fish<-gamlss(pi~factor(pulse)+year+month,family=BEZI,data=na.omit(cod),trace=F)
 summary(m2.fish)
 #model diagnostics
-plot.gamlss(m2.fish)
+plot(m2.fish)
 hist(resid(m2.fish))
 
 
-
-par(mfrow=c(1,1), bg = rgb(232,245,252, maxColorValue = 255))
 #ANODEV
-m2.intercept<-gamlss(pi~1,family=BEZI,data=na.omit(cod0),trace=F)
-m2.pulse<-gamlss(pi~1+factor(pulse),family=BEZI,data=na.omit(cod0),trace=F)
-m2.yr<-gamlss(pi~1+factor(pulse)+year,family=BEZI,data=na.omit(cod0),trace=F)
-m2.month<-gamlss(pi~1+factor(pulse)+year+month,family=BEZI,data=na.omit(cod0),trace=F)
+m2.intercept<-gamlss(pi~0,family=BEZI,data=na.omit(cod),trace=F)
+m2.pulse<-gamlss(pi~1+factor(pulse),family=BEZI,data=na.omit(cod),trace=F)
+m2.yr<-gamlss(pi~1+factor(pulse)+year,family=BEZI,data=na.omit(cod),trace=F)
+m2.month<-gamlss(pi~1+factor(pulse)+year+month,family=BEZI,data=na.omit(cod),trace=F)
 
 m2ANODEV<-lrtest(m2.intercept,m2.pulse,m2.yr,m2.month)
 m2ANODEV
@@ -78,7 +71,7 @@ m2ANODEV
 glm.model.fish<-as.data.frame(m1ANODEV)%>%
   rename(numDf='#Df')
 
-glm.model.fish%>%
+glm.fish<-glm.model.fish%>%
   mutate(Deviance=2*LogLik)%>%
   mutate(dDeviance=Deviance-lag(Deviance))%>%
   mutate(LR=exp(dDeviance/2))%>%
@@ -88,13 +81,17 @@ glm.model.fish%>%
 
 beta.model.fish<-as.data.frame(m2ANODEV)%>%
   rename(numDf='#Df')
-beta.model.fish%>%
+beta.fish<-beta.model.fish%>%
   mutate(Deviance=2*LogLik)%>%
   mutate(dDeviance=Deviance-lag(Deviance))%>%
   mutate(LR=exp(dDeviance/2))%>%
   mutate(AIC=dDeviance-2*numDf)%>%
   mutate(LR_Df=LR/Df)%>%
   mutate(dAIC=AIC-lag(AIC))
+
+# save tables
+write.csv(glm.fish,"./output/glm.model.csv",row.names=FALSE)
+write.csv(beta.fish,"./output/beta.model.csv",row.names = FALSE)
 
 # ---- Model parameters: fish ----
 m1.fish$coefficients
@@ -108,19 +105,16 @@ beta.prob<-odds/(1+odds)
 
 parameter.summary<-data.frame(glm=m1.fish$coefficients,
                               beta=beta.prob)
-
+# save table
+write.csv(parameter.summary,"./output/parameters.csv",row.names = FALSE)
 # ---- Fit statistics: fish -----
 fit.fish<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
                      glm=c(AIC(m1.fish),exp(logLik(m1.fish)),
                            sum(m1.fish$residuals^2)/m1.fish$df.residual),
                      beta=c(AIC(m2.fish),exp(logLik(m2.fish)),
                             sum(m2.fish$residuals^2)/m2.fish$df.residual))
-
-
-sum(m1.fish$residuals^2)/m1.fish$df.residual
-
-summary(m2.fish)
-sum(m2.fish$residuals^2)/m2.fish$df.residual
+# save table
+write.csv(fit.fish,"./output/fit.stats.csv",row.names = FALSE)
 
 
 # ---- Regular Beta Regression -----
