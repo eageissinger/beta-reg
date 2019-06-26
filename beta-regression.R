@@ -67,6 +67,52 @@ m2.month<-gamlss(pi~1+factor(pulse)+year+month,family=BEZI,data=na.omit(cod),tra
 
 m2ANODEV<-lrtest(m2.intercept,m2.pulse,m2.yr,m2.month)
 m2ANODEV
+
+# ---- Regular Beta Regression -----
+# glmmTMB with type III ANOVA 
+cod0<-cod%>%
+  filter(pi!=0)
+m3<-glmmTMB(pi~factor(pulse),
+            beta_family(link = "logit"),
+            data=cod0)
+res3<-simulateResiduals(m3)
+plot(res3)
+summary(m3)
+Anova.glmmTMB(m3,type = "III")
+
+m3.intercept<-glmmTMB(pi~1,beta_family(link="logit"),data=cod0)
+m3.pulse<-glmmTMB(pi~1+factor(pulse),beta_family(link="logit"),data=cod0)
+
+m3ANODEV<-lrtest(m3.intercept,m3.pulse)
+m3ANODEV # off from anova just a little bit
+
+# Advantages: ANOVA table
+# Disadvantages: no diagnostic plots
+
+# Regular beta regressions {betareg}
+m2<-betareg(pi~factor(pulse),data=cod0)
+plot(m2)
+# diagnostic plots for manuscript
+plot(m2,which=1,type="pearson")
+plot(m2,which=4,type="pearson")
+plot(m2,which=5,type="deviance")
+plot(m2,which=2,type="pearson")
+# model summary
+summary(m4)
+#ANODEV
+m4.intercept<-betareg(pi~1,data=cod0)
+m4.pulse<-betareg(pi~1+factor(pulse),data=cod0)
+
+m4ANODEV<-lrtest(m4.intercept,m4.pulse)
+m4ANODEV # same result as the GLMMTMB
+
+# might be able to use ANOVA table from GLMMTMB
+# and use diagnostics from betareg
+# Summaries produce the same estimates
+# will use combo of glmmTMB and betareg for two analyses
+# then use zero-inflated for the third
+
+
 # ---- Model comparison: fish ----
 # ANOVA Table GLM
 glm.model.fish<-as.data.frame(m1ANODEV)%>%
@@ -120,48 +166,3 @@ fit.fish<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
                             sum(m2.fish$residuals^2)/m2.fish$df.residual))
 # save table
 write.csv(fit.fish,"./output/fit.stats.csv",row.names = FALSE)
-
-
-# ---- Regular Beta Regression -----
-# glmmTMB with type III ANOVA 
-cod0<-cod%>%
-  filter(pi!=0)
-m3<-glmmTMB(pi~factor(pulse),
-            beta_family(link = "logit"),
-            data=cod0)
-res3<-simulateResiduals(m3)
-plot(res3)
-summary(m3)
-Anova.glmmTMB(m3,type = "III")
-
-m3.intercept<-glmmTMB(pi~1,beta_family(link="logit"),data=cod0)
-m3.pulse<-glmmTMB(pi~1+factor(pulse),beta_family(link="logit"),data=cod0)
-
-m3ANODEV<-lrtest(m3.intercept,m3.pulse)
-m3ANODEV # off from anova just a little bit
-
-# Advantages: ANOVA table
-# Disadvantages: no diagnostic plots
-
-# Regular beta regressions {betareg}
-m2<-betareg(pi~factor(pulse),data=cod0)
-plot(m2)
-# diagnostic plots for manuscript
-plot(m2,which=1,type="pearson")
-plot(m2,which=4,type="pearson")
-plot(m2,which=5,type="deviance")
-plot(m2,which=2,type="pearson")
-# model summary
-summary(m4)
-#ANODEV
-m4.intercept<-betareg(pi~1,data=cod0)
-m4.pulse<-betareg(pi~1+factor(pulse),data=cod0)
-
-m4ANODEV<-lrtest(m4.intercept,m4.pulse)
-m4ANODEV # same result as the GLMMTMB
-
-# might be able to use ANOVA table from GLMMTMB
-# and use diagnostics from betareg
-# Summaries produce the same estimates
-# will use combo of glmmTMB and betareg for two analyses
-# then use zero-inflated for the third
