@@ -68,9 +68,10 @@ m2.month<-gamlss(pi~1+factor(pulse)+year+month,family=BEZI,data=na.omit(cod),tra
 m2ANODEV<-lrtest(m2.intercept,m2.pulse,m2.yr,m2.month)
 m2ANODEV
 # ---- Model comparison: fish ----
+# ANOVA Table GLM
 glm.model.fish<-as.data.frame(m1ANODEV)%>%
-  rename(numDf='#Df')
-
+  rename(numDf='#Df') # adjust name of #DF so that R can run
+# ANOVA with parameter comparison for GLM
 glm.fish<-glm.model.fish%>%
   mutate(Deviance=2*LogLik)%>%
   mutate(dDeviance=Deviance-lag(Deviance))%>%
@@ -79,8 +80,10 @@ glm.fish<-glm.model.fish%>%
   mutate(LR_Df=LR/Df)%>%
   mutate(dAIC=AIC-lag(AIC))
 
+# ANOVA Table Beta
 beta.model.fish<-as.data.frame(m2ANODEV)%>%
-  rename(numDf='#Df')
+  rename(numDf='#Df') # adjust name of #DF so that R can run
+# ANOVA with parameter comparison for beta
 beta.fish<-beta.model.fish%>%
   mutate(Deviance=2*LogLik)%>%
   mutate(dDeviance=Deviance-lag(Deviance))%>%
@@ -94,6 +97,7 @@ write.csv(glm.fish,"./output/glm.model.csv",row.names=FALSE)
 write.csv(beta.fish,"./output/beta.model.csv",row.names = FALSE)
 
 # ---- Model parameters: fish ----
+# Calculate model parameters for glm and beta
 m1.fish$coefficients
 summary(m1.fish)
 m1.fish$coefficients
@@ -103,6 +107,7 @@ betacoef<-m2.fish$mu.coefficients
 odds<-exp(betacoef)
 beta.prob<-odds/(1+odds)
 
+# combine model parameters into single table for comparison
 parameter.summary<-data.frame(glm=m1.fish$coefficients,
                               beta=beta.prob)
 # save table
