@@ -15,6 +15,7 @@ library(dplyr)
 library(lmtest)
 library(glmmTMB)
 library(DHARMa)
+library(rcompanion)
 
 # ----- Fish models -----
 # explore data
@@ -57,7 +58,6 @@ summary(m2.fish)
 #model diagnostics
 plot(m2.fish)
 hist(resid(m2.fish))
-
 
 #ANODEV
 m2.intercept<-gamlss(pi~0,family=BEZI,data=na.omit(cod),trace=F)
@@ -159,10 +159,25 @@ parameter.summary<-data.frame(glm=m1.fish$coefficients,
 # save table
 write.csv(parameter.summary,"./output/parameters.csv",row.names = FALSE)
 # ---- Fit statistics: fish -----
+
+# Calculate r-squared for LR
+# LR = (1-R^2)^(-n/2)
+# Use Cox and Snell method (Cox and Snell 1989)
+nagelkerke(m1.fish) # r-squared for glm
+(1-0.350309)^(-101/2) # cox snell
+(1-Rsq(m2.fish,type=c("Cox Snell")))^(-101/2) # cox snell for beta regression
+
 fit.fish<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
-                     glm=c(AIC(m1.fish),exp(logLik(m1.fish)),
+                     glm=c(AIC(m1.fish),(1-0.350309)^(-101/2),
                            sum(m1.fish$residuals^2)/m1.fish$df.residual),
-                     beta=c(AIC(m2.fish),exp(logLik(m2.fish)),
+                     beta=c(AIC(m2.fish),(1-Rsq(m2.fish,type=c("Cox Snell")))^(-101/2),
                             sum(m2.fish$residuals^2)/m2.fish$df.residual))
+
+# Alternative R-squared using Nagelkerke (Nagelkerke 1991) 
+(1-Rsq(m2.fish))^(-101/2) # nagelkerke
+nagelkerke(m1.fish)
+(1-.818843)^(-101/2) # nagelkerke
+
+
 # save table
 write.csv(fit.fish,"./output/fit.stats.csv",row.names = FALSE)
