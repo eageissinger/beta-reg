@@ -42,11 +42,11 @@ anova(m1.fish)
 #ANODEV
 m1.intercept<-glm(pi~1,data=na.omit(cod),
                   family=gaussian(link = "identity"))
-m1.pulse<-glm(pi~1+factor(pulse),data=na.omit(cod),
+m1.pulse<-glm(pi~factor(pulse),data=na.omit(cod),
               family=gaussian(link = "identity"))
-m1.yr<-glm(pi~1+factor(pulse)+year,data=na.omit(cod),
+m1.yr<-glm(pi~factor(pulse)+year,data=na.omit(cod),
            family=gaussian(link = "identity"))
-m1.month<-glm(pi~1+factor(pulse)+year+month,data=na.omit(cod),
+m1.month<-glm(pi~factor(pulse)+year+month,data=na.omit(cod),
               family=gaussian(link = "identity"))
 m1ANODEV<-lrtest(m1.intercept,m1.pulse,m1.yr,m1.month)
 m1ANODEV
