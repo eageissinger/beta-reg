@@ -17,6 +17,7 @@ library(glmmTMB)
 library(DHARMa)
 library(rcompanion)
 
+
 # ----- Fish models -----
 # explore data
 head(cod)
@@ -28,11 +29,15 @@ m1.fish<-glm(pi~factor(pulse)+year+month,data=na.omit(cod),
 plot(m1.fish)
 hist(resid(m1.fish))
 # plots for manuscript
+par(mfrow=c(2,2))
 plot(x=fitted(m1.fish),y=resid(m1.fish),main=NULL,xlab="Fitted Values",ylab="Residuals")
 hist(resid(m1.fish),main=NULL,xlab="Residuals")
 qqnorm(resid(m1.fish),main=NULL)
 qqline(resid(m1.fish),col='red')
-plot(m1.fish,which=4,main=NULL)
+plot(m1.fish,which=4,caption = NULL,main = NULL) # will need to white out the equation
+# save as 800 x 650 PNG
+par(mfrow=c(1,1))
+
 
 # model summary/diagnostics
 summary(m1.fish)
@@ -93,10 +98,14 @@ m3ANODEV # off from anova just a little bit
 m2<-betareg(pi~factor(pulse),data=cod0)
 plot(m2)
 # diagnostic plots for manuscript
-plot(m2,which=1,type="pearson")
-plot(m2,which=4,type="pearson")
-plot(m2,which=5,type="deviance")
-plot(m2,which=2,type="pearson")
+par(mfrow=c(2,2))
+plot(m2,which=1,type="pearson",caption = NULL)
+plot(m2,which=4,type="pearson",caption=NULL)
+plot(m2,which=5,type="deviance",caption = NULL)
+plot(m2,which=2,type="pearson",caption = NULL)
+# save as 800 x 650 PNG
+par(mfrow=c(1,1))
+
 # model summary
 summary(m4)
 #ANODEV
