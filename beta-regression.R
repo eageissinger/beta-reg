@@ -74,28 +74,12 @@ m2ANODEV<-lrtest(m2.intercept,m2.pulse,m2.yr,m2.month)
 m2ANODEV
 
 # ---- Regular Beta Regression -----
-# glmmTMB with type III ANOVA 
+# using {betareg}
 cod0<-cod%>%
-  filter(pi!=0)
-m3<-glmmTMB(pi~factor(pulse),
-            beta_family(link = "logit"),
-            data=cod0)
-res3<-simulateResiduals(m3)
-plot(res3)
-summary(m3)
-Anova.glmmTMB(m3,type = "III")
+  filter(pi!=0) # take out 0's for example set
 
-m3.intercept<-glmmTMB(pi~1,beta_family(link="logit"),data=cod0)
-m3.pulse<-glmmTMB(pi~1+factor(pulse),beta_family(link="logit"),data=cod0)
-
-m3ANODEV<-lrtest(m3.intercept,m3.pulse)
-m3ANODEV # off from anova just a little bit
-
-# Advantages: ANOVA table
-# Disadvantages: no diagnostic plots
-
-# Regular beta regressions {betareg}
-m2<-betareg(pi~factor(pulse),data=cod0)
+m1<-betareg(pi~as.factor(pulse),data=cod0)
+summary(m1)
 plot(m2)
 # diagnostic plots for manuscript
 par(mfrow=c(2,2))
@@ -170,10 +154,14 @@ write.csv(parameter.summary,"./output/parameters.csv",row.names = FALSE)
 # ---- Fit statistics: fish -----
 
 # Calculate r-squared for LR
-# LR = (1-R^2)^(-n/2)
+# LR = (1-R^2)^(-n/2), where n is the number of observations
 # Use Cox and Snell method (Cox and Snell 1989)
-nagelkerke(m1.fish) # r-squared for glm
+# GLM LR
+nagelkerke(m1.fish) # r-squared for glm, extract cox and snell
 (1-0.350309)^(-101/2) # cox snell
+# BetaReg LR
+(1-m1$pseudo.r.squared)^(-101/2) # LR for {betareg}
+# zero-inflated beta LR
 (1-Rsq(m2.fish,type=c("Cox Snell")))^(-101/2) # cox snell for beta regression
 
 fit.fish<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
