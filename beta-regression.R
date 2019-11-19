@@ -82,10 +82,10 @@ summary(m1)
 plot(m2)
 # diagnostic plots for manuscript
 par(mfrow=c(2,2))
-plot(m2,which=1,type="pearson",caption = NULL)
-plot(m2,which=4,type="pearson",caption=NULL)
-plot(m2,which=5,type="deviance",caption = NULL)
-plot(m2,which=2,type="pearson",caption = NULL)
+plot(m1,which=1,type="pearson",caption = NULL)
+plot(m1,which=4,type="pearson",caption=NULL)
+plot(m1,which=5,type="deviance",caption = NULL)
+plot(m1,which=2,type="pearson",caption = NULL)
 # save as 800 x 650 PNG
 par(mfrow=c(1,1))
 
