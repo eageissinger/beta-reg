@@ -1,6 +1,6 @@
-# Author: Isabella Richmond & Emilie Geissinger (https://github.com/eageissinger)
+# Author: Isabella Richmond & Emilie Geissinger
 # Date: June 1, 2020
-# code for beta regression in the natural sciences paper. Comparing beta regression to
+# code for elemental composition case study in beta regression in the natural sciences paper. Comparing beta regression to
 # general linear model. Using %N for Abies balsamea (balsam fir) 0 modelling site and year.
 # comparing models with likelihood ratios, residual deviance/residual, and AICc.
 
