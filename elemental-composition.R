@@ -21,7 +21,7 @@ summary(abba)
 gzlmN <- glm(N_dec~Year+Site, family = gaussian(link = identity), data = abba)
 gzlmNFrameNormal<-cbind(abba,residuals(gzlmN),fitted(gzlmN))
 # diagnostic plots for manuscript 
-png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/gzlmN_diagnostics.png", width = 180, height = 180, units = "mm",res = 300)
+png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/gzlmN_diagnostics.png", width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(gzlmN),y=resid(gzlmN),main=NULL,
      xlab="Fitted Values",ylab="Residuals",cex.lab=1.5)
@@ -51,7 +51,7 @@ gzlmNANODEV
 brN<-betareg(N_dec~Year+Site, link="logit",data=abba)
 brNFrameBeta<-cbind(abba,residuals(brN),fitted(brN))
 # diagnostic plots for manuscript
-png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/betaN_diagnostics.png",  width = 180, height = 180, units = "mm",res = 300)
+png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/betaN_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(brN),y=resid(brN),main=NULL,
      xlab="Fitted Values",ylab="Residuals",cex.lab=1.5)
