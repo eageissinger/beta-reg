@@ -1,6 +1,6 @@
-# Author: Isabella Richmond & Emilie Geissinger
-# Date: June 1, 2020
-# code for elemental composition case study in beta regression in the natural sciences paper. Comparing beta regression to
+# Author: Isabella Richmond & Emilie Geissinger (https://github.com/eageissinger)
+# Date: July 02, 2020
+# code for beta regression in the natural sciences paper. Comparing beta regression to
 # general linear model. Using %N for Abies balsamea (balsam fir) 0 modelling site and year.
 # comparing models with likelihood ratios, residual deviance/residual, and AICc.
 
@@ -54,23 +54,24 @@ brNFrameBeta<-cbind(abba,residuals(brN),fitted(brN))
 png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/betaN_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(brN),y=resid(brN),main=NULL,
-     xlab="Fitted Values",ylab="Residuals",cex.lab=1.5)
+     xlab="Fitted Values",ylab="Residuals",cex.lab=1)
 mtext("A",side=2,line=2,at=4.5,col='black',font=2,las=1,size=1.75)
-hist(resid(brN),main=NULL,xlab="Residuals",
-     cex.lab=1.5)
-mtext("B",side=2,line=2,at=32,col='black',font=2,las=1,size=1.75)
-qqnorm(resid(brN),main=NULL,cex.lab=1.5)
+plot(brN,which = 4, caption=NULL, cex.lab=1) 
+mtext("B",side=2,line=2,at=4.5,col='black',font=2,las=1,size=1.75)
+plot(brN, which = 5, caption = NULL, cex.lab=1)
 mtext("C",side=2,line=2,at=4.5,col='black',font=2,las=1,size=1.75)
-qqline(resid(brN),col='red')
-plot(brN,which=2, cex.lab=1.5, caption=NULL)
+plot(brN,which=2, caption=NULL, cex.lab=1.5)
 mtext("D",side=2,line=2,at=0.9,col='black',font=2,las=1,size=1.75)
 dev.off()
+
 # model summary and fit statistics
 summary(brN)
 AIC(brN)
 exp(logLik(brN))
 res.devN<-residuals(brN,type = "deviance")
 (sum(res.devN^2))/109
+
+sum(res.devN)/109
 # ANODEV
 brNintercept<-betareg(N_dec~1, link="logit",data=abba)
 brNyear<-betareg(N_dec~1+Year, link="logit",data=abba)
