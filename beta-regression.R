@@ -13,11 +13,14 @@ library(gamlss)
 library(emmeans)
 library(dplyr)
 library(lmtest)
-library(DHARMa)
+library(DHARMa) # for glmmTMB
 library(rcompanion)
+library(hnp)
+library(ggpubr)
+library(grDevices)
+library(gamlssdiag)
 
-
-# ----- Fish models -----
+source("revised-gamlss-plot-fx.R")
 # explore data
 head(cod)
 summary(cod)
@@ -26,17 +29,67 @@ summary(cod)
 m1.fish<-glm(pi~factor(pulse)+year+month,data=na.omit(cod),
         family = gaussian(link="identity"))
 plot(m1.fish)
-hist(resid(m1.fish))
+hist(resid(m1.fish),cex.lab=1.25)
+mtext("A",side=2,line=1,at=50,col='black',las=1,font=2,size=2)
+hnp(m1.fish,pch=16) #half normal with envelope (for dispersion)
 # plots for manuscript
+# plots for manuscript
+png(width = 160, height = 160, units = "mm",res =600)
 par(mfrow=c(2,2))
-plot(x=fitted(m1.fish),y=resid(m1.fish),main=NULL,xlab="Fitted Values",ylab="Residuals")
-hist(resid(m1.fish),main=NULL,xlab="Residuals")
-qqnorm(resid(m1.fish),main=NULL)
+plot(x=fitted(m1.fish),y=resid(m1.fish),main=NULL,
+     xlab="Fitted Values",ylab="Residuals",cex.lab=1.15)
+mtext("A",side=2,line=2,at=1,col='black',font=2,las=1,size=1.75)
+hist(resid(m1.fish),main=NULL,xlab="Residuals",
+     cex.lab=1.15)
+mtext("B",side=2,line=2,at=50,col='black',font=2,las=1,size=1.75)
+qqnorm(resid(m1.fish),main=NULL,cex.lab=1.15)
+mtext("C",side=2,line=2,at=1.1,col='black',font=2,las=1,size=1.75)
 qqline(resid(m1.fish),col='red')
-plot(m1.fish,which=4,caption = NULL,main = NULL) # will need to white out the equation
+plot(m1.fish,which=4,caption = NULL,main = NULL,cex.lab=1.15) 
+mtext("D",side=2,line=2,at=.26,col='black',font=2,las=1,size=1.75)
+dev.off()
+# will need to white out the equation
 # save as 800 x 650 PNG
-par(mfrow=c(1,1))
 
+# ---- Manuscript Figures ----
+fit<-fitted(m1.fish)
+res<-resid(m1.fish)
+
+residuals<-data.frame(cbind(fit,res))
+
+fig1a<-ggplot(residuals,aes(x=fit,y=res))+
+  geom_point(fill='white')+
+  theme_classic()+
+  ylab("Residuals")+xlab("Fitted Values")
+fig1b<-ggplot(residuals)+geom_histogram(aes(x=res),bins=10,colour='black',fill='white')+
+  theme_classic()+
+  ylab("Frequency")+xlab("Residuals")
+fig1data=data.frame(qqnorm(resid(m1.fish),main=NULL))
+fig1c<-ggplot(fig1data)+geom_point(aes(x=x,y=y))+
+  geom_smooth(method="lm",aes(x=x,y=y),se=FALSE,color='red')+
+  theme_classic()+
+  xlab("Theoretical Quantiles")+ylab("Sample Quantiles")
+fig1d<-ggplot(m1.fish, aes(seq_along(.cooksd), .cooksd))+geom_bar(stat="identity", position="identity",colour='black',fill='black')+
+  xlab("Obs. Number")+ylab("Cook's distance")+
+  theme_classic()
+
+Fig1<-ggarrange(fig1a,fig1b,fig1c,fig1d,nrow=2,ncol=2,
+                labels=c("a","b","c","d"))
+hnp(m1.fish,pch=16)->test
+x<-test["x"]
+u<-test["upper"]
+l<-test["lower"]
+m<-test["median"]
+r<-test["residuals"]
+envelope<-bind_cols(x,u,l,m,r)
+ggplot(envelope)+geom_point(aes(x=x,y=residuals))+
+  geom_line(aes(x=x,y=upper))+
+  geom_line(aes(x=x,y=lower))+
+  geom_line(aes(x=x,y=median),linetype='dashed')+
+  theme_classic()+
+  xlab("Theoretical quantiles")+
+  ylab("Residuals")
+glimpse(envelope)
 
 # model summary/diagnostics
 summary(m1.fish)
@@ -60,8 +113,13 @@ m1ANODEV
 m2.fish<-gamlss(pi~factor(pulse)+year+month,family=BEZI,data=na.omit(cod),trace=F)
 summary(m2.fish)
 #model diagnostics
+png(width = 160, height = 160, units = "mm",res =600)
 plot(m2.fish)
+dev.off()
 hist(resid(m2.fish))
+plot(cooksd(gamlss,pi~factor(pulse)+year+month,family=BEZI,data=na.omit(cod)),type="h",
+     ylab="Cook's distance",xlab="Obs. Number")
+dev.off()
 
 #ANODEV
 m2.intercept<-gamlss(pi~0,family=BEZI,data=na.omit(cod),trace=F)
@@ -79,10 +137,10 @@ cod0<-cod%>%
 
 m1<-betareg(pi~as.factor(pulse),data=cod0)
 summary(m1)
-plot(m2)
+plot(m1)
 # diagnostic plots for manuscript
 par(mfrow=c(2,2))
-plot(m1,which=1,type="pearson",caption = NULL)
+plot(m1,which=1,type="pearson",caption=NULL,pch=16)
 plot(m1,which=4,type="pearson",caption=NULL)
 plot(m1,which=5,type="deviance",caption = NULL)
 plot(m1,which=2,type="pearson",caption = NULL)
@@ -127,7 +185,6 @@ beta.fish<-beta.model.fish%>%
   mutate(dDeviance=Deviance-lag(Deviance))%>%
   mutate(LR=exp(dDeviance/2))%>%
   mutate(AIC=dDeviance-2*numDf)%>%
-  mutate(LR_Df=LR/Df)%>%
   mutate(dAIC=AIC-lag(AIC))
 
 # save tables
@@ -177,3 +234,5 @@ nagelkerke(m1.fish)
 
 # save table
 write.csv(fit.fish,"./output/fit.stats.csv",row.names = FALSE)
+
+# LR = exp(G/2)

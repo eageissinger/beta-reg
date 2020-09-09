@@ -43,31 +43,30 @@ plot.gamlss <- function (x, xvar=NULL, parameters=NULL, ts=FALSE, summaries=TRUE
     plot(fittedvalues , residx,
          xlab = "Fitted Values",  
          ylab = "Quantile Residuals", 
-         main = "Against Fitted Values",
-         frame.plot = TRUE) 
+         frame.plot = TRUE,
+         cex.lab=1.15) 
     # top right  
     plot(xvar, residx, 
          ylab = "Quantile Residuals",
-         xlab = xlabel, 
-         main = paste("Against ", xlabel), 
-         frame.plot = TRUE) #  points(par(col="blue4"))
+         xlab = "Index", 
+         frame.plot = TRUE,
+         cex.lab=1.15) #  points(par(col="blue4"))
   }    
-  plot(density(residx), 
-       xlab = "Quantile. Residuals", 
-       ylab = "Density", 
-       main = "Density Estimate",
-       frame.plot = TRUE, 
-       col="black", 
-       lwd=0.4 ) #col="deepskyblue4", col="darkgreen", 
-  rug(residx, col="red")
   
-  qqnorm(residx, main = "Normal Q-Q Plot",
+  qqnorm(residx,
          xlab = "Theoretical Quantiles",
          ylab = "Sample Quantiles", 
          plot.it = TRUE, 
-         frame.plot = TRUE, 
-         col="black")
+         frame.plot = TRUE,
+         caption=NULL,
+         main=NULL,
+         col="black",
+         cex.lab=1.15)
   lines(residx, residx, col="red" , lwd=.4, cex=.4 )
+  
+  plot(cooksd(gamlss,pi~factor(pulse)+year+month,family=BEZI,data=na.omit(cod)),type="h",
+       ylab="Cook's distance",xlab="Obs. Number",
+       cex.lab=1.15)
   
   if ( identical(summaries, TRUE))
   { 
