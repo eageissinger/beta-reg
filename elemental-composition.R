@@ -1,5 +1,5 @@
 # Author: Isabella Richmond & Emilie Geissinger (https://github.com/eageissinger)
-# Date: July 02, 2020
+# Date: September 30, 2020
 # code for beta regression in the natural sciences paper. Comparing beta regression to
 # general linear model. Using %N for Abies balsamea (balsam fir) 0 modelling site and year.
 # comparing models with likelihood ratios, residual deviance/residual, and AICc.
@@ -24,15 +24,15 @@ gzlmNFrameNormal<-cbind(abba,residuals(gzlmN),fitted(gzlmN))
 png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/gzlmN_diagnostics.png", width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(gzlmN),y=resid(gzlmN),main=NULL,
-     xlab="Fitted Values",ylab="Residuals",cex.lab=1.5)
+     xlab="Fitted Values",ylab="Residuals",cex.lab=1.15)
 mtext("A",side=2,line=2,at=0.008,col='black',font=2,las=1,size=1.75)
 hist(resid(gzlmN),main=NULL,xlab="Residuals",
-     cex.lab=1.5)
+     cex.lab=1.15)
 mtext("B",side=2,line=2,at=39,col='black',font=2,las=1,size=1.75)
-qqnorm(resid(gzlmN),main=NULL,cex.lab=1.5)
+qqnorm(resid(gzlmN),main=NULL,cex.lab=1.15)
 mtext("C",side=2,line=2,at = 0.008,col='black',font=2,las=1,size=1.75)
 qqline(resid(gzlmN),col='red')
-plot(gzlmN,which=4,caption = NULL,main = NULL,cex.lab=1.5)
+plot(gzlmN,which=4,caption = NULL,main = NULL,cex.lab=1.15)
 mtext("D",side=2,line=2,at=0.7,col='black',font=2,las=1,size=1.75)
 dev.off()
 # model summary and fit statistics 
@@ -54,13 +54,13 @@ brNFrameBeta<-cbind(abba,residuals(brN),fitted(brN))
 png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/betaN_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(brN),y=resid(brN),main=NULL,
-     xlab="Fitted Values",ylab="Residuals",cex.lab=1)
+     xlab="Fitted Values",ylab="Residuals",cex.lab=1.15, type="pearson")
 mtext("A",side=2,line=2,at=4.5,col='black',font=2,las=1,size=1.75)
-plot(brN,which = 4, caption=NULL, cex.lab=1) 
+plot(brN,which = 4, caption=NULL, cex.lab=1.15, type="pearson") 
 mtext("B",side=2,line=2,at=4.5,col='black',font=2,las=1,size=1.75)
-plot(brN, which = 5, caption = NULL, cex.lab=1)
+plot(brN, which = 5, caption = NULL, type="deviance", cex.lab=1.15)
 mtext("C",side=2,line=2,at=4.5,col='black',font=2,las=1,size=1.75)
-plot(brN,which=2, caption=NULL, cex.lab=1.5)
+plot(brN,which=2, type="pearson",caption=NULL, cex.lab=1.15)
 mtext("D",side=2,line=2,at=0.9,col='black',font=2,las=1,size=1.75)
 dev.off()
 
