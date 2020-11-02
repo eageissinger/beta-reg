@@ -45,12 +45,14 @@ plot.gamlss <- function (x, xvar=NULL, parameters=NULL, ts=FALSE, summaries=TRUE
          ylab = "Quantile Residuals", 
          frame.plot = TRUE,
          cex.lab=1.15) 
+    mtext("A",side=2,line=2,at=2,col='black',font=2,las=1,size=1.75)
     # top right  
     plot(xvar, residx, 
          ylab = "Quantile Residuals",
          xlab = "Index", 
          frame.plot = TRUE,
          cex.lab=1.15) #  points(par(col="blue4"))
+    mtext("B",side=2,line=2,at=2,col='black',font=2,las=1,size=1.75)
   }    
   
   qqnorm(residx,
@@ -63,10 +65,12 @@ plot.gamlss <- function (x, xvar=NULL, parameters=NULL, ts=FALSE, summaries=TRUE
          col="black",
          cex.lab=1.15)
   lines(residx, residx, col="red" , lwd=.4, cex=.4 )
+  mtext("C",side=2,line=2,at=2,col='black',font=2,las=1,size=1.75)
   
   plot(cooksd(gamlss,pi~factor(pulse)+year+month,family=BEZI,data=na.omit(cod)),type="h",
        ylab="Cook's distance",xlab="Obs. Number",
        cex.lab=1.15)
+  mtext("D",side=2,line=2,at=6.25,col='black',font=2,las=1,size=1.75)
   
   if ( identical(summaries, TRUE))
   { 
