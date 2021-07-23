@@ -1,15 +1,14 @@
-# Author: Isabella Richmond & Emilie Geissinger (https://github.com/eageissinger)
-# Date: September 30, 2020
-# code for beta regression in the natural sciences paper. Comparing beta regression to
-# general linear model. Using %N for Abies balsamea (balsam fir) 0 modelling site and year.
+
+# Comparing beta regression to general linear model. 
+# Using %N for Abies balsamea (balsam fir) 0 modelling site and year.
 # comparing models with likelihood ratios, residual deviance/residual, and AICc.
 
 #Load required packages 
-library("easypackages")
-libraries("betareg", "car", "lme4", "lmtest", "DescTools", "tidyverse")
+p <- c("betareg", "lme4", "lmtest", "DescTools")
+lapply(p, library, character.only = T)
 
 # load data
-stoich <- read_csv("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Final Exam/Data/TotalStoich_2016_2017_Biomass.csv")
+stoich <- read_csv("input/elemental-composition.csv")
 # subset balsam fir (ABBA)
 abba <- subset(stoich, Species == "ABBA")
 head(abba)
@@ -21,7 +20,7 @@ summary(abba)
 gzlmN <- glm(N_dec~Year+Site, family = gaussian(link = identity), data = abba)
 gzlmNFrameNormal<-cbind(abba,residuals(gzlmN),fitted(gzlmN))
 # diagnostic plots for manuscript 
-png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/gzlmN_diagnostics.png", width = 160, height = 160, units = "mm",res = 600)
+png("figures/gzlm_elemental-composition_diagnostics.png", width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(gzlmN),y=resid(gzlmN),main=NULL,
      xlab="Fitted Values",ylab="Residuals",cex.lab=1.15)
@@ -51,7 +50,7 @@ gzlmNANODEV
 brN<-betareg(N_dec~Year+Site, link="logit",data=abba)
 brNFrameBeta<-cbind(abba,residuals(brN),fitted(brN))
 # diagnostic plots for manuscript
-png("C:/Users/Isabella Richmond/Documents/M.Sc/General Linear Models/Beta Regression/betaN_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
+png("figures/beta_elemental-composition_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
 par(mfrow=c(2,2))
 plot(x=fitted(brN),y=resid(brN),main=NULL,
      xlab="Fitted Values",ylab="Residuals",cex.lab=1.15, type="pearson")
