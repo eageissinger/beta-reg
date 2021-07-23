@@ -106,7 +106,7 @@ beta.abbaN<-beta.model.abbaN%>%
 
 # save tables
 write.csv(glm.abbaN,"output/glm_elemental-composition_model.csv",row.names=FALSE)
-write.csv(beta.abbaN,"output/beta_elemental-compsition_model.csv",row.names = FALSE)
+write.csv(beta.abbaN,"output/beta_elemental-composition_model.csv",row.names = FALSE)
 
 #### Model Parameters ####
 # calculate model parameters for glm and beta
