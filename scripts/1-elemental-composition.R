@@ -135,9 +135,9 @@ PseudoR2(glmN, which = "CoxSnell") # r-squared for glm, extract cox and snell
 (1-brN$pseudo.r.squared)^(-114/2) # LR for {betareg}
 
 fit.abbaN<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
-                     glm=c(AIC(glmN),(1-PseudoR2(glmN, which = "CoxSnell"))^(-101/2),
+                     glm=c(AIC(glmN),(1-PseudoR2(glmN, which = "CoxSnell"))^(-114/2),
                            sum(glmN$residuals^2)/glmN$df.residual),
-                     beta=c(AIC(brN),(1-brN$pseudo.r.squared)^(-101/2),
+                     beta=c(AIC(brN),(1-brN$pseudo.r.squared)^(-114/2),
                             sum(brN$residuals^2)/brN$df.residual))
 # save table
 write.csv(fit.abbaN,"output/elemental-composition_fit.csv",row.names = FALSE)
