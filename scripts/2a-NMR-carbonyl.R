@@ -129,4 +129,4 @@ fit.soilcc<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
                             sum(m2$residuals^2)/m2$df.residual))
 
 # save table
-write.csv(fit.soilcc,"carbonyl-carbon_fit.csv",row.names = FALSE)
+write.csv(fit.soilcc,"output/carbonyl-carbon_fit.csv",row.names = FALSE)

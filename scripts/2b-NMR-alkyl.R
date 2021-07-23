@@ -129,4 +129,4 @@ fit.soilac<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
                               sum(m2$residuals^2)/m2$df.residual))
 
 # save table
-write.csv(fit.soilac,"alkyl-carbon_fit.csv",row.names = FALSE)
+write.csv(fit.soilac,"output/alkyl-carbon_fit.csv",row.names = FALSE)
