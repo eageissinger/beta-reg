@@ -1,8 +1,3 @@
----
-output: github_document
----
-
-
 ## A Case for Beta Regression in the Natural Sciences  
 In preparation for submission to Ecosphere
 
