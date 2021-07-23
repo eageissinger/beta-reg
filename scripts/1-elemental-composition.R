@@ -4,7 +4,7 @@
 
 #### Packages ####
 # load required packages 
-p <- c("betareg", "lme4", "lmtest", "DescTools", "dplyr")
+p <- c("betareg", "lmtest", "DescTools", "dplyr")
 lapply(p, library, character.only = T)
 
 #### Data #### 
