@@ -9,7 +9,9 @@ In preparation for submission to Ecosphere
     + [David C. Schneider](https://www.mun.ca/osc/dschneider/bio.php)
     
 
-This repository contains the code and data accompanying the paper "A Case for Beta Regression in the Natural Sciences" (In Prep.). R scripts are organized in `scripts/`, raw data can be found in 'input/', figures used in the manuscript can be found in 'figures/', and model output tables can be found in 'output/'. Package dependencies include: `betareg`, `lmtest`, `DescTools`, `dplyr`.
+This repository contains the code and data accompanying the paper "A Case for Beta Regression in the Natural Sciences" (In Prep.). R scripts are organized in `scripts/`, raw data can be found in `input/`, figures used in the manuscript can be found in `figures/`, and model output tables can be found in `output/`.  
+
+Package dependencies include: `betareg`, `lmtest`, `DescTools`, `dplyr`.
 
 
     
