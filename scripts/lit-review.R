@@ -2,10 +2,7 @@
 
 # load pacakges
 library(tidyverse)
-library(wesanderson)
 
-# set working directory
-setwd("C:/Users/emili/Documents/Research/Beta/lit-review/")
 
 lit.full<-read.delim("lit_review.txt")
 
@@ -89,10 +86,11 @@ lit%>%
 
 #Table S1
 lit%>%
-  select(ï..Citation,year.published,analysis.used)
+  select(?..Citation,year.published,analysis.used)
 
 # Fig 1
-ggplot(lit)+
+#png("figures/beta_carboynl-carbon_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
+Fig1<-ggplot(lit)+
   geom_bar(aes(x=year.published,fill=Tidy.Discipline),position="stack", stat="count")+
   geom_text(aes(x=year.published, fill=Tidy.Discipline, label = ..count..),stat="count",position = "stack",vjust=1.5)+
   scale_fill_brewer(palette = "Set3")+
@@ -110,8 +108,10 @@ ggplot(lit)+
         legend.key.size = unit(1,"cm"),
         legend.position = "top")
 
+ggsave(plot=Fig1,filename="C:/Users/emili/Documents/Research/Beta/figures/lit-review-Fig1.png",width=160,height=160,units="mm", dpi=600)
+
 # Fig 2
-ggplot(lit)+
+Fig2<-ggplot(lit)+
   geom_vline(aes(xintercept=2012),linetype='dashed',size=1)+
   geom_bar(aes(x=year.published,fill=method),position = "stack",stat="count")+
   scale_fill_brewer(palette = "Set3")+
@@ -129,6 +129,8 @@ ggplot(lit)+
         legend.text = element_text(size=12),
         legend.key.size = unit(.75,"cm"),
         legend.position = "top")
+
+ggsave(plot=Fig2,filename="C:/Users/emili/Documents/Research/Beta/figures/lit-review-Fig2.png",width=160,height=160,units="mm", dpi=600)
 
 # Table 1a
 #before 2012
