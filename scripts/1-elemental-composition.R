@@ -4,7 +4,7 @@
 
 #### Packages ####
 # load required packages 
-p <- c("betareg", "lmtest", "DescTools", "dplyr")
+p <- c("betareg", "lmtest", "DescTools", "dplyr", "Metrics")
 lapply(p, library, character.only = T)
 
 #### Data #### 
@@ -120,7 +120,8 @@ beta.prob<-odds/(1+odds)
 
 # combine model parameters into single table for comparison
 parameter.summary<-data.frame(glm=glmN$coefficients,
-                              beta=beta.prob)
+                              beta.coef=betacoef,
+                              beta.prob=beta.prob)
 # save table
 write.csv(parameter.summary,"output/elemental-composition_parameters.csv",row.names = FALSE)
 
@@ -134,10 +135,20 @@ PseudoR2(glmN, which = "CoxSnell") # r-squared for glm, extract cox and snell
 # BetaReg LR
 (1-brN$pseudo.r.squared)^(-114/2) # LR for {betareg}
 
-fit.abbaN<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
-                     glm=c(AIC(glmN),(1-PseudoR2(glmN, which = "CoxSnell"))^(-114/2),
-                           sum(glmN$residuals^2)/glmN$df.residual),
-                     beta=c(AIC(brN),(1-brN$pseudo.r.squared)^(-114/2),
-                            sum(brN$residuals^2)/brN$df.residual))
+# predicted values for RSME calculation
+data.predicted.lm<- c(predict(glmN,abba))
+data.predicted.beta<- c(predict(brN,abba))
+
+fit.abbaN<-data.frame(Fit.statistics=c('AIC','LR','R^2',"RMSE",'Residual Deviance'),
+                     glm=c(AIC(glmN), # AIC
+                           (1-PseudoR2(glmN, which = "CoxSnell"))^(-114/2), #LR
+                           PseudoR2(glmN, which = "CoxSnell"), #R^2
+                           rmse(abba$N_arc,data.predicted.lm), #RMSE
+                           sum(glmN$residuals^2)/glmN$df.residual), #Residual Deviance
+                     beta=c(AIC(brN), # AIC
+                            (1-brN$pseudo.r.squared)^(-114/2), #LR
+                            brN$pseudo.r.squared, # R^2
+                            rmse(abba$N_dec,data.predicted.beta), # RMSE
+                            sum(brN$residuals^2)/brN$df.residual)) # Residual Deviance
 # save table
 write.csv(fit.abbaN,"output/elemental-composition_fit.csv",row.names = FALSE)

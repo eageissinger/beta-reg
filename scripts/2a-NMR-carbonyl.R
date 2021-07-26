@@ -5,7 +5,7 @@
 
 #### Packages ####
 # load required packages 
-p <- c("betareg", "lmtest", "DescTools", "dplyr")
+p <- c("betareg", "lmtest", "DescTools", "dplyr","Metrics")
 lapply(p, library, character.only = T)
 
 #### Data #### 
@@ -107,26 +107,46 @@ write.csv(CCglm.soilcc,file ="output/glm_carbonyl-carbon_model.csv",row.names=FA
 write.csv(CCbeta.soilcc,file ="output/beta_carbonyl-carbon_model.csv",row.names = FALSE)
 
 #### Model Parameters ####
-m1.SoilNMR$coefficients
-summary(m1.SoilNMR)
+m1.soilcc$coefficients
+summary(m1.soilcc)
 
 summary(m2)
 betacoef<-m2$coefficients
 odds<-exp(betacoef$mean)
 beta.prob<-odds/(1+odds)
 
-parameter.summary<-data.frame(glm=m1.SoilNMR$coefficients,
-                              beta=beta.prob)
+parameter.summary<-data.frame(glm.coef=m1.soilcc$coefficients,
+                              beta.coef=betacoef,
+                              beta.prob=beta.prob)
 
 # save table
 write.csv(parameter.summary,"output/carbonyl-carbon_parameters.csv",row.names = FALSE)
 
 #### Fit Statistics ####
-fit.soilcc<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
-                     glm=c(AIC(m1.SoilNMR),exp(logLik(m1.SoilNMR)),
-                           sum(m1.SoilNMR$residuals^2)/m1.SoilNMR$df.residual),
-                     beta=c(AIC(m2),exp(logLik(m2)),
-                            sum(m2$residuals^2)/m2$df.residual))
+# Calculate r-squared for LR
+# LR = (1-R^2)^(-n/2), where n is the number of observations
+# Use Cox and Snell method (Cox and Snell 1989)
+# GLM LR
+PseudoR2(m1.soilcc, which = "CoxSnell") # r-squared for glm, extract cox and snell
+(1-PseudoR2(m1.soilcc, which = "CoxSnell"))^(-36/2) 
+# BetaReg LR
+(1-m2$pseudo.r.squared)^(-36/2) # LR for {betareg}
+
+#predicted values for RSME calculation
+data.predicted.lm<-c(predict(m1.soilcc,na.omit(soilcc)))
+data.predicted.beta<-(c(predict(m2,na.omit(soilcc))))
+
+fit.soilcc<-data.frame(Fit.statistics=c('AIC','LR','R^2','RMSE','Residual Deviance'),
+                     glm=c(AIC(m1.soilcc), # AIC
+                           (1-PseudoR2(m1.soilcc, which = "CoxSnell"))^(-36/2), # LR
+                           PseudoR2(m1.soilcc, which = "CoxSnell"), #R^2
+                           rmse(na.omit(soilcc$CC_arc), data.predicted.lm), #RSME
+                           sum(m1.soilcc$residuals^2)/m1.soilcc$df.residual), # Residual Deviance
+                     beta=c(AIC(m2), # AIC
+                            (1-m2$pseudo.r.squared)^(-36/2), # LR
+                            m2$pseudo.r.squared, # R^2
+                            rmse(na.omit(soilcc$CC),data.predicted.beta), #RSME
+                            sum(m2$residuals^2)/m2$df.residual)) # Residual Deviance
 
 # save table
 write.csv(fit.soilcc,"output/carbonyl-carbon_fit.csv",row.names = FALSE)
