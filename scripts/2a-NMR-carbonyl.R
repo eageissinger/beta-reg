@@ -47,7 +47,9 @@ m1ANODEV<-lrtest(m1.intercept,m1.OHCC,m1.CR,m1.OHCCCR)
 m1ANODEV
 
 #### Beta Regression ####
-m2 <- betareg(CC~Region+Layer+Region*Layer,data=soilcc)
+m2 <- betareg(CC~Region+Layer+Region*Layer,
+              link="logit",link.phi = "identity",
+              data=soilcc)
 m2FrameBeta<-cbind(soilcc,residuals(m2),fitted(m2))
 # diagnostic plots for manuscript
 png("figures/beta_carboynl-carbon_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)

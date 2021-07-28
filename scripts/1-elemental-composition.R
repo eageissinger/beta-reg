@@ -47,7 +47,7 @@ glmNANODEV <- lrtest(glmNintercept, glmNyear, glmNyearsite)
 glmNANODEV
 
 #### Beta Regression ####
-brN<-betareg(N_dec ~ Year + Site, link="logit", data=abba)
+brN<-betareg(N_dec ~ Year + Site, link="logit", link.phi = "identity", data=abba)
 brNFrameBeta<-cbind(abba,residuals(brN),fitted(brN))
 # diagnostic plots for manuscript
 png("figures/beta_elemental-composition_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)

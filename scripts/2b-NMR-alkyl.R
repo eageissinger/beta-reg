@@ -47,7 +47,9 @@ m1ANODEV<-lrtest(m1.intercept,m1.OHac,m1.CR,m1.OHacCR)
 m1ANODEV
 
 #### Beta Regression ####
-m2 <- betareg(AC~Region+Layer+Region*Layer,data=soilac)
+m2 <- betareg(AC~Region+Layer+Region*Layer,
+              link="logit",link.phi = "identity",
+              data=soilac)
 m2FrameBeta<-cbind(soilac,residuals(m2),fitted(m2))
 # diagnostic plots for manuscript
 png("figures/beta_alkyl-carbon_diagnostics.png",  width = 160, height = 160, units = "mm",res = 600)
