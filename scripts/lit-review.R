@@ -18,7 +18,7 @@ write.csv(lit,"./lit-review-inprogress.csv",row.names = FALSE)
 
 
 # load prepped data
-lit<-read.csv("./lit-review-complete.csv")%>%
+lit<-read.csv("./lit-review/lit-review-complete.csv")%>%
   filter(method!="")# remove blank entries
 
 lit%>%distinct(method)
@@ -103,8 +103,8 @@ Fig1<-ggplot(lit)+
   theme(axis.text = element_text(size=12),
         axis.title.x=element_text(size=14,margin=margin(t=10)),
         axis.title.y=element_text(size=14,margin=margin(r=10)))+
-  theme(legend.title = element_text(size=14,hjust=.5),
-        legend.text = element_text(size=12),
+  theme(legend.title = element_text(size=10,hjust=.5),
+        legend.text = element_text(size=10),
         legend.key.size = unit(1,"cm"),
         legend.position = "top")
 
@@ -125,12 +125,11 @@ Fig2<-ggplot(lit)+
   theme(axis.text = element_text(size=12),
         axis.title.x=element_text(size=14,margin=margin(t=10)),
         axis.title.y=element_text(size=14,margin=margin(r=10)))+
-  theme(legend.title = element_text(size=14,hjust=.5),
-        legend.text = element_text(size=12),
-        legend.key.size = unit(.75,"cm"),
-        legend.position = "top")
+  theme(legend.title = element_text(size=12,hjust=.5),
+        legend.text = element_text(size=10),
+        legend.key.size = unit(.75,"cm"))
 
-ggsave(plot=Fig2,filename="C:/Users/emili/Documents/Research/Beta/figures/lit-review-Fig2.png",width=160,height=160,units="mm", dpi=600)
+ggsave(plot=Fig2,filename="C:/Users/emili/Documents/Research/Beta/figures/lit-review-Fig2.png",width=180,height=160,units="mm", dpi=600)
 
 # Table 1a
 #before 2012
