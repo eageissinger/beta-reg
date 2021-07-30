@@ -110,6 +110,7 @@ write.csv(acbeta.soilac,file ="output/beta_alkyl-carbon_model.csv",row.names = F
 
 #### Model Parameters ####
 m1$coefficients
+m1.squared<-(m1$coefficients)^2
 summary(m1)
 
 summary(m2)
@@ -118,6 +119,7 @@ odds<-exp(betacoef$mean)
 beta.prob<-odds/(1+odds)
 
 parameter.summary<-data.frame(glm=m1$coefficients,
+                              glm2<-m1.squared,
                               beta.coef=betacoef,
                               beta.prob=beta.prob)
 

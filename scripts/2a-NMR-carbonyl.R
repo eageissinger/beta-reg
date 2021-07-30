@@ -110,6 +110,7 @@ write.csv(CCbeta.soilcc,file ="output/beta_carbonyl-carbon_model.csv",row.names 
 
 #### Model Parameters ####
 m1.soilcc$coefficients
+m1.squared<-(m1.soilcc$coefficients)^2
 summary(m1.soilcc)
 
 summary(m2)
@@ -118,6 +119,7 @@ odds<-exp(betacoef$mean)
 beta.prob<-odds/(1+odds)
 
 parameter.summary<-data.frame(glm.coef=m1.soilcc$coefficients,
+                              glm2=m1.squared,
                               beta.coef=betacoef,
                               beta.prob=beta.prob)
 
@@ -152,3 +154,4 @@ fit.soilcc<-data.frame(Fit.statistics=c('AIC','LR','R^2','RMSE','Residual Devian
 
 # save table
 write.csv(fit.soilcc,"output/carbonyl-carbon_fit.csv",row.names = FALSE)
+

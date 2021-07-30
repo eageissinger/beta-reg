@@ -111,6 +111,7 @@ write.csv(beta.abbaN,"output/beta_elemental-composition_model.csv",row.names = F
 #### Model Parameters ####
 # calculate model parameters for glm and beta
 glmN$coefficients
+glm2<-(glmN$coefficients)^2
 summary(glmN)
 
 summary(brN)
@@ -119,7 +120,8 @@ odds<-exp(betacoef$mean)
 beta.prob<-odds/(1+odds)
 
 # combine model parameters into single table for comparison
-parameter.summary<-data.frame(glm=glmN$coefficients,
+parameter.summary<-data.frame(glm.coef=glmN$coefficients,
+                              glm2=glm2,
                               beta.coef=betacoef,
                               beta.prob=beta.prob)
 # save table
