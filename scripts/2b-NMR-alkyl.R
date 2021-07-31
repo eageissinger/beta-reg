@@ -110,7 +110,7 @@ write.csv(acbeta.soilac,file ="output/beta_alkyl-carbon_model.csv",row.names = F
 
 #### Model Parameters ####
 m1$coefficients
-m1.squared<-(m1$coefficients)^2
+m1.squared<-(sin(m1$coefficients))^2
 summary(m1)
 
 summary(m2)

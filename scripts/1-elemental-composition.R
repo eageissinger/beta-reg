@@ -111,7 +111,7 @@ write.csv(beta.abbaN,"output/beta_elemental-composition_model.csv",row.names = F
 #### Model Parameters ####
 # calculate model parameters for glm and beta
 glmN$coefficients
-glm2<-(glmN$coefficients)^2
+glm2<-(sin(glmN$coefficients))^2
 summary(glmN)
 
 summary(brN)

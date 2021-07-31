@@ -110,7 +110,7 @@ write.csv(CCbeta.soilcc,file ="output/beta_carbonyl-carbon_model.csv",row.names 
 
 #### Model Parameters ####
 m1.soilcc$coefficients
-m1.squared<-(m1.soilcc$coefficients)^2
+m1.squared<-(sin(m1.soilcc$coefficients))^2
 summary(m1.soilcc)
 
 summary(m2)
