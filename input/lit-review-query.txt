@@ -1,0 +1,13 @@
+Searched on: 2021-03-31
+Query:
+Any field exact phrase "proportion data"
+OR
+Any field exact phrase "Percent data"
+Years: 2004-2021
+Peer-reviewed journals/articles in the Natural Sciences
+No medical or biomedical papers
+Language: English
+
+Initial hit list (including medical journals): 684 results
+Proportion or percent data required as response variable
+

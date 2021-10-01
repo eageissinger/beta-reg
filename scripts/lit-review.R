@@ -4,18 +4,6 @@
 library(tidyverse)
 
 
-lit.full<-read.delim("lit_review.txt")
-
-head(lit.full)
-
-lit<-lit.full%>%
-  filter(!is.na(analysis.used))%>%
-  select(-X)
-head(lit)
-
-# save revised file
-write.csv(lit,"./lit-review-inprogress.csv",row.names = FALSE)
-
 
 # load prepped data
 lit<-read.csv("./lit-review/lit-review-complete.csv")%>%
